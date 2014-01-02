@@ -282,6 +282,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         mLastRotation = degrees;
         checkAndDisplayMatrix();
     }
+    
+    public void setPhotoViewRotationAbsolute(float degrees) {
+    	degrees %= 360;
+        mSuppMatrix.postRotate(degrees - mLastRotation);
+        mLastRotation = degrees;
+        checkAndDisplayMatrix();
+    }
 
     public final ImageView getImageView() {
         ImageView imageView = null;
@@ -849,12 +856,20 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
         } else if (mScaleType == ScaleType.CENTER_INSIDE) {
             float scale = Math.min(1.0f, Math.min(widthScale, heightScale));
+
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
                     (viewHeight - drawableHeight * scale) / 2F);
 
         } else {
-            RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
+            RectF mTempSrc = null;
+            
+            if (mLastRotation == 90 || mLastRotation == 270) {
+            	mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
+            } else {
+            	mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
+            }
+            
             RectF mTempDst = new RectF(0, 0, viewWidth, viewHeight);
 
             switch (mScaleType) {
