@@ -150,6 +150,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private boolean mRotationDetectionEnabled = false;
     private boolean mZoomEnabled;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
+    private float mTentativeRotation = 0.0f;
 
     public PhotoViewAttacher(ImageView imageView) {
         mImageView = new WeakReference<ImageView>(imageView);
@@ -651,6 +652,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
     
     public final void update(float rotation) {
+    	mTentativeRotation = rotation;
     	update();
     	setPhotoViewRotation(rotation);
     }
@@ -864,7 +866,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         } else {
             RectF mTempSrc = null;
             
-            if (mLastRotation == 90 || mLastRotation == 270) {
+            if (viewWidth < viewHeight && mTentativeRotation == 90 || mTentativeRotation == 270) {
             	mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
             } else {
             	mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
