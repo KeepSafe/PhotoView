@@ -150,7 +150,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private boolean mRotationDetectionEnabled = false;
     private boolean mZoomEnabled;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
-    private float mTentativeRotation = 0.0f;
 
     public PhotoViewAttacher(ImageView imageView) {
         mImageView = new WeakReference<ImageView>(imageView);
@@ -652,9 +651,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
     
     public final void update(float rotation) {
-    	mTentativeRotation = rotation;
+    	mLastRotation = rotation;
     	update();
-    	setPhotoViewRotation(rotation);
+    	//setPhotoViewRotation(rotation);
     }
 
     @Override
@@ -864,15 +863,22 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     (viewHeight - drawableHeight * scale) / 2F);
 
         } else {
-            RectF mTempSrc = null;
-            
-            if (viewWidth < viewHeight && mTentativeRotation == 90 || mTentativeRotation == 270) {
-            	mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
-            } else {
-            	mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
-            }
-            
+            RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst = new RectF(0, 0, viewWidth, viewHeight);
+            
+            if (drawableWidth > drawableHeight) {
+            	if ((mLastRotation != 90.0f && mLastRotation != 270.0f) || viewWidth > viewHeight) {
+            		mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
+            	} else {
+            		mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
+            	}
+            } else {
+            	if ((mLastRotation != 90.0f && mLastRotation != 270.0f) || viewWidth > viewHeight) {
+            		mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
+            	} else {
+            		mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
+            	}
+            }
 
             switch (mScaleType) {
                 case FIT_CENTER:
@@ -898,6 +904,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
 
         resetMatrix();
+        setPhotoViewRotation(mLastRotation);
     }
 
     private int getImageViewWidth(ImageView imageView) {
