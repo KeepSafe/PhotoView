@@ -24,6 +24,9 @@ uploadArchives {
             repository(url: 'http://mvn.getkeepsafe.com/artifactory/libs-release-local') {
                 authentication(userName: keepsafeUser, password: keepsafePassword)
             }
+            snapshotRepository(url: 'http://mvn.getkeepsafe.com/artifactory/libs-snapshot-local') {
+                authentication(userName: keepsafeUser, password: keepsafePassword);
+            }
             pom.project {
                 artifactId 'library'
                 packaging 'aar'
