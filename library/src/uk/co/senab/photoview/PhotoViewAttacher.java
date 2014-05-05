@@ -842,8 +842,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
         mBaseMatrix.reset();
 
-        final float widthScale = viewWidth / drawableWidth;
-        final float heightScale = viewHeight / drawableHeight;
+        final float widthScale = (mLastRotation % 90 > 0) ? (viewHeight / drawableWidth) : (viewWidth / drawableWidth);
+        final float heightScale = (mLastRotation % 90 > 0) ? (viewWidth / drawableHeight) : (viewHeight / drawableHeight);
 
         if (mScaleType == ScaleType.CENTER) {
             mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F,
