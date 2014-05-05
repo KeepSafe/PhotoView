@@ -842,8 +842,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
         mBaseMatrix.reset();
 
-        final float widthScale = (mLastRotation % 90 > 0) ? (viewHeight / drawableWidth) : (viewWidth / drawableWidth);
-        final float heightScale = (mLastRotation % 90 > 0) ? (viewWidth / drawableHeight) : (viewHeight / drawableHeight);
+        final float widthScale = viewWidth / drawableWidth;
+        final float heightScale = viewHeight / drawableHeight;
 
         if (mScaleType == ScaleType.CENTER) {
             mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F,
@@ -866,18 +866,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst = new RectF(0, 0, viewWidth, viewHeight);
             
-            if (drawableWidth > drawableHeight) {
-            	if ((mLastRotation != 90.0f && mLastRotation != 270.0f) || viewWidth > viewHeight) {
-            		mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
-            	} else {
-            		mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
-            	}
-            } else {
-            	if ((mLastRotation != 90.0f && mLastRotation != 270.0f) || viewWidth > viewHeight) {
-            		mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
-            	} else {
-            		mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
-            	}
+            if (mLastRotation % 180 == 0) {
+            	mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
+            } else if (mLastRotation % 180 != 0) {
+            	mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
             }
 
             switch (mScaleType) {
