@@ -15,6 +15,7 @@
  *******************************************************************************/
 package uk.co.senab.photoview;
 
+import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.view.View;
@@ -175,12 +176,28 @@ public interface IPhotoView {
     void setOnPhotoTapListener(PhotoViewAttacher.OnPhotoTapListener listener);
 
     /**
+     * Returns a listener to be invoked when the Photo displayed by this View
+     * is tapped with a single tap.
+     *
+     * @return PhotoViewAttacher.OnPhotoTapListener currently set, may be null
+     */
+    PhotoViewAttacher.OnPhotoTapListener getOnPhotoTapListener();
+
+    /**
      * Register a callback to be invoked when the View is tapped with a single
      * tap.
      *
      * @param listener - Listener to be registered.
      */
     void setOnViewTapListener(PhotoViewAttacher.OnViewTapListener listener);
+
+    /**
+     * Returns a callback listener to be invoked when the View is tapped with a single
+     * tap.
+     *
+     * @return PhotoViewAttacher.OnViewTapListener currently set, may be null
+     */
+    PhotoViewAttacher.OnViewTapListener getOnViewTapListener();
 
     /**
      * Changes the current scale to the specified value.
@@ -231,5 +248,13 @@ public interface IPhotoView {
      * @param rotationDegree - Degree to rotate PhotoView by, should be in range 0 to 360
      */
     void setPhotoViewRotation(float rotationDegree);
+
+    /**
+     * Extracts currently visible area to Bitmap object, if there is no image loaded yet or the
+     * ImageView is already destroyed, returns {@code null}
+     *
+     * @return currently visible area as bitmap or null
+     */
+    public Bitmap getVisibleRectangleBitmap();
 
 }
